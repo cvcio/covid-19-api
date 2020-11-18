@@ -10,7 +10,11 @@ import (
 
 	"github.com/cvcio/covid-19-api/pkg/config"
 	"github.com/cvcio/covid-19-api/pkg/db"
+	"github.com/cvcio/covid-19-api/pkg/redis"
+	"github.com/gin-contrib/cache/persistence"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/ulule/limiter/v3"
+	sredis "github.com/ulule/limiter/v3/drivers/store/redis"
 	"go.uber.org/zap"
 )
 
@@ -38,13 +42,41 @@ func main() {
 	// Start Mongo
 	// ============================================================
 	log.Debug("[SERVER] Initialize Mongo")
-	dbConn, err := db.New(cfg.Mongo.URL, cfg.Mongo.Path, cfg.Mongo.DialTimeout)
+	dbConn, err := db.New(cfg.MongoURL(), cfg.Mongo.Path, cfg.Mongo.DialTimeout)
 	if err != nil {
 		log.Fatalf("[SERVER] Register DB: %v", err)
 	}
-	log.Debug("[SERVER] Connected to Mongo")
 	defer dbConn.Close()
 
+	// database := client.Database(cfg.Mongo.Path)
+
+	// ============================================================
+	// Redis Client
+	// ============================================================
+	redisPool, err := redis.NewCachePool(cfg.RedisURL())
+	if err != nil {
+		log.Fatalf("[SERVER] error connecting to redis: %v", err)
+	}
+
+	redisClient, err := redis.NewLimitsClient(cfg.RedisWithPathURL())
+	if err != nil {
+		log.Fatalf("[SERVER] error connecting to redis: %v", err)
+	}
+
+	// ============================================================
+	// Memory Storage
+	// ============================================================
+	// req cache
+	storeCache := persistence.NewRedisCacheWithPool(redisPool.Pool, 60*time.Minute)
+	storeCache.Flush()
+	// limits
+	storeLimits, err := sredis.NewStoreWithOptions(redisClient.Client, limiter.StoreOptions{
+		Prefix:   "limiter",
+		MaxRetry: 4,
+	})
+	if err != nil {
+		log.Fatalf("[SERVER] error creating limits store clients to redis: %v", err)
+	}
 	// ============================================================
 	// Start API Service
 	// ============================================================
@@ -54,6 +86,8 @@ func main() {
 		Handler: NewAPI(
 			cfg,
 			dbConn,
+			storeLimits,
+			storeCache,
 			logger,
 		),
 		ReadTimeout:    cfg.Server.ReadTimeout,
@@ -81,7 +115,7 @@ func main() {
 	// ============================================================
 	// Listen for os signals
 	osSignals := make(chan os.Signal, 1)
-	signal.Notify(osSignals, os.Interrupt, syscall.SIGTERM)
+	signal.Notify(osSignals, syscall.SIGINT, syscall.SIGTERM)
 
 	// ============================================================
 	// Stop API Service

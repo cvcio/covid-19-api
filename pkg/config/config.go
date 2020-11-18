@@ -17,18 +17,19 @@ type Config struct {
 		DomainName      string        `default:"localhost" envconfig:"DOMAIN_NAME"`
 		ReadTimeout     time.Duration `default:"10s" envconfig:"READ_TIMEOUT"`
 		WriteTimeout    time.Duration `default:"20s" envconfig:"WRITE_TIMEOUT"`
-		ShutdownTimeout time.Duration `default:"10s" envconfig:"SHUTDOWN_TIMEOUT"`
+		ShutdownTimeout time.Duration `default:"30s" envconfig:"SHUTDOWN_TIMEOUT"`
 	}
 	Mongo struct {
 		URL         string        `envconfig:"MONGO_URL" default:"mongodb://localhost:27017"`
 		Path        string        `envconfig:"MONGO_PATH" default:"database"`
 		User        string        `envconfig:"MONGO_USER" default:""`
 		Pass        string        `envconfig:"MONGO_PASS" default:""`
-		DialTimeout time.Duration `envconfig:"DIAL_TIMEOUT" default:"5s"`
+		DialTimeout time.Duration `envconfig:"DIAL_TIMEOUT" default:"30s"`
 	}
 	Redis struct {
 		Host string `envconfig:"REDIS_HOST" default:"localhost"`
 		Port string `envconfig:"REDIS_PORT" default:"6379"`
+		Path string `envconfig:"REDIS_PATH" default:"0"`
 	}
 	RateLimit struct {
 		Period time.Duration `default:"60m" envconfig:"RATE_DURATION"`
@@ -53,4 +54,19 @@ func New() *Config {
 // ServerURL returns server `host:port`
 func (c *Config) ServerURL() string {
 	return fmt.Sprintf("%s:%s", c.Server.Host, c.Server.Port)
+}
+
+// RedisURL returns server `host:port`
+func (c *Config) RedisURL() string {
+	return fmt.Sprintf("%s:%s", c.Redis.Host, c.Redis.Port)
+}
+
+// RedisWithPathURL returns server `host:port`
+func (c *Config) RedisWithPathURL() string {
+	return fmt.Sprintf("redis://%s:%s/%s", c.Redis.Host, c.Redis.Port, c.Redis.Path)
+}
+
+// MongoURL returns server `host:port`
+func (c *Config) MongoURL() string {
+	return fmt.Sprintf("%s/%s", c.Mongo.URL, c.Mongo.Path)
 }

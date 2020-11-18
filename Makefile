@@ -14,7 +14,7 @@ run:
 	realize start
 
 run-api:
-	realize start -n infoflow
+	realize start -n covid-19
 
 test:
 	go test -v ./...

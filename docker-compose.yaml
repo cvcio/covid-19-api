@@ -11,12 +11,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
   
   redis:
-    image: redis:5
+    image: redis:latest
     ports:
       - 6379:6379
   
   redisinsight:
-    image: redislabs/redisinsight
+    image: redislabs/redisinsight:latest
     ports: 
       - 8002:8001
   
@@ -29,62 +29,14 @@ services:
     labels:
       - "traefik.frontend.rule=Host:mongo.docker.localhost"
   
-  # mongo-express:
-  #   image: mongo-express
-  #   ports:
-  #     - 8081:8081
-  #   links:
-  #     - mongo:mongo
-  #   labels:
-  #     - "traefik.frontend.rule=Host:express.docker.localhost"
-  
-  postgres:
-    image: postgres:12
+  mongo-express:
+    image: mongo-express
     ports:
-      - "5432:5432"
-    volumes:
-    - data_postgres:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: infoflow
-    labels:
-      - "traefik.frontend.rule=Host:express.docker.localhost"
-  
-  graphql-engine:
-    image: hasura/graphql-engine:v1.3.2
-    ports:
-      - "9080:8080"
-    depends_on:
-      - postgres
+      - 8081:8081
     links:
-      - postgres:postgres
-    environment:
-      # database url to connect
-      HASURA_GRAPHQL_DATABASE_URL: postgres://user:pass@postgres:5432/infoflow
-      ## enable the console served by server
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set "false" to disable console
-      ## enable debugging mode. It is recommended to disable this in production
-      HASURA_GRAPHQL_DEV_MODE: "true"
-      ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
-    command:
-      - graphql-engine
-      - serve
+      - mongo:mongo
     labels:
       - "traefik.frontend.rule=Host:express.docker.localhost"
-
-  pgweb:
-    image: sosedoff/pgweb
-    ports: 
-      - "8081:8081" 
-    links: 
-      - postgres:postgres  # my database container is called postgres, not db
-    environment:
-      - DATABASE_URL=postgres://user:pass@postgres:5432/infoflow?sslmode=disable
-    depends_on:
-      - postgres
     
 volumes:
   data_mongo:
-  data_postgres:
