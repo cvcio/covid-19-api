@@ -2,7 +2,7 @@
 
 > last updated at 2020-11-18
 
-COVID&ndash;19 API is open-source and developed by the team at [Civic Information Office](https://cvcio.org/) in collaboration with [iMedD](https://imedd.org/) to help academics, data scientists, journalists, goverment agencies, health professionals and the public, understand the COVID-19 outbreak in Greece and worldwide.
+COVID&ndash;19 API is open-source and developed by the team at [Civic Information Office](https://cvcio.org/) in collaboration with [iMedD](https://imedd.org/) to help academics, data scientists, journalists, government agencies, health professionals and the public, understand the COVID-19 outbreak in Greece and worldwide.
 
 Data is sourced from [Johns Hopkins CSSE](https://github.com/CSSEGISandData/COVID-19) and [WorlOMeter](https://www.worldometers.info/coronavirus/) for global data, and from [EODY](https://eody.gov.gr/) and [iMedD](https://imedd.org/) for data related to Greece. Data updates run approximately every two hours. For Greece, we collect data from [EODY](https://eody.gov.gr/epidimiologika-statistika-dedomena/ektheseis-covid-19/)'s daily reports, **when and if published**, and direct updates sent to [iMedD](https://imedd.org/)'s dedicated team by [EODY](https://eody.gov.gr/). Unfortunatelly, the Greek administration has no official data sharing mechanism in place, thus there might be some delays between updates. Additionaly to COVID&ndash;19 related data we collect information regarding policy responses, such as area specific lockdowns, and information about educational structures, such as schools suspension, as published by [GSCP](https://www.civilprotection.gr/) and [SCH](https://www.sch.gr/anastoli/web/) respectively.
 
