@@ -57,7 +57,7 @@ func List(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*Global, error) {
 		keys := strings.Split(opts.Keys, ",")
 		for _, key := range keys {
 			if IsValidKey(strings.TrimSpace(key), validKeys) {
-				projection = append(projection, bson.E{key, 1})
+				projection = append(projection, bson.E{strings.TrimSpace(key), 1})
 			}
 		}
 	}
