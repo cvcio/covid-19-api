@@ -1,7 +1,11 @@
 REGISTRY=reg.plagiari.sm
-PROJECT=covid-19
+PROJECT=covid-19-api
 TAG:=$(shell git rev-parse HEAD)
 BRANCH:=$(shell git rev-parse --abbrev-ref HEAD)
+
+ifeq (,$(VERSION))
+VERSION=latest
+endif
 
 keys:
 	openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048
@@ -19,17 +23,26 @@ run-api:
 test:
 	go test -v ./...
 
-docker:
-	docker build -t $(REG_TAG) .
+.PHONY: linux
+linux: GOOS := linux
+linux: GOARCH := amd64
 
-docker-latest: docker
-	docker tag $(REG_TAG) $(REG_PROJ):latest
+.PHONY: vendor
+vendor: 
+	go mod vendor
+
+.PHONY: docker
+docker: linux vendor
+	docker build -t $(REGISTRY)/$(PROJECT):$(VERSION) -f Dockerfile .
 
 docker-push:
-	docker push $(REG_TAG)
+	docker push $(REGISTRY)/$(PROJECT):$(VERSION)
 
-docker-push-latest:
-	docker push $(REG_PROJ):latest
+docker-release: linux vendor
+	docker build -t $(REGISTRY)/$(PROJECT):$(TAG) -f Dockerfile .
+	docker tag $(REGISTRY)/$(PROJECT):$(TAG) $(REGISTRY)/$(PROJECT):$(BRANCH) 
+	docker push $(REGISTRY)/$(PROJECT):$(TAG)
+	docker push $(REGISTRY)/$(PROJECT):$(BRANCH) 
 
 db-start:
 	docker-compose up -d
@@ -51,8 +64,6 @@ clean-mongo:
 	docker volume rm -f infoflow_data_mongo
 
 clean-db: clean-mongo
-
-fresh-dgraph: clean-mongo db-start
 
 prod:
 	go mod vendor

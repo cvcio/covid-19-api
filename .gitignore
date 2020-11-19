@@ -30,6 +30,7 @@ bin/*
 tmp
 *.tmp
 vendor/*/
+vendor/
 .realize
 dist/*
 
