@@ -34,5 +34,5 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           tags: |
-            ${{ secrets.CVCIO_CONTAINER_REGISTRY }}/covid-19/api:${{ steps.vars.outputs.tag }}
-            ${{ secrets.CVCIO_CONTAINER_REGISTRY }}/covid-19/api:latest
+            ${{ secrets.CVCIO_CONTAINER_REGISTRY }}/covid-19-api:${{ steps.vars.outputs.tag }}
+            ${{ secrets.CVCIO_CONTAINER_REGISTRY }}/covid-19-api:latest
