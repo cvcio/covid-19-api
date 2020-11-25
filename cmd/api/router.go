@@ -10,6 +10,7 @@ import (
 	"github.com/cvcio/covid-19-api/pkg/middleware"
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
+	"github.com/gin-contrib/gzip"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"github.com/ulule/limiter/v3"
@@ -43,11 +44,12 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		router.Use(middleware.EnableCORS(" *." + cfg.Server.DomainName))
 	}
 
+	router.Use(gzip.Gzip(gzip.DefaultCompression))
 	router.Use(limiterMiddleware)
 
 	// handlers
 	global := handlers.NewGlobalHandler(cfg, dbConn, logger)
-	greece := handlers.NewGlobalHandler(cfg, dbConn, logger)
+	greece := handlers.NewGreeceHandler(cfg, dbConn, logger)
 	meta := handlers.NewGlobalHandler(cfg, dbConn, logger)
 
 	// routes
@@ -69,20 +71,20 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		greeceRoutes.GET("/:region/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
 	}
 
-	totalRoutes := router.Group("/total")
+	totalRoutes := router.Group("/agg")
 	{
-		totalRoutes.GET("", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		totalRoutes.GET("/global", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		totalRoutes.GET("/global/:country", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		totalRoutes.GET("/global/:country/:key", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		totalRoutes.GET("/global/:country/:key/:from", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		totalRoutes.GET("/global/:country/:key/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, global.List))
+		totalRoutes.GET("", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
+		totalRoutes.GET("/global", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
+		totalRoutes.GET("/global/:country", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
+		totalRoutes.GET("/global/:country/:keys", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
+		totalRoutes.GET("/global/:country/:keys/:from", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
+		totalRoutes.GET("/global/:country/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
 
-		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		totalRoutes.GET("/greece/:region/:key", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		totalRoutes.GET("/greece/:region/:key/:from", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		totalRoutes.GET("/greece/:region/:key/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
+		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
+		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
+		totalRoutes.GET("/greece/:region/:keys", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
 	}
 
 	metaRoutes := router.Group("/meta")
@@ -94,7 +96,7 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 	// Forbid Access
 	// This is usefull when you combine multiple microservices
 	router.NoRoute(func(c *gin.Context) {
-		c.String(http.StatusForbidden, "Access Forbidden")
+		c.String(http.StatusNotFound, "404 Not Found")
 		c.Abort()
 	})
 

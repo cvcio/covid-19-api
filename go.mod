@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/garyburd/redigo v1.6.2
 	github.com/gin-contrib/cache v1.1.0
+	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-contrib/zap v0.0.1
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis v6.15.9+incompatible // indirect

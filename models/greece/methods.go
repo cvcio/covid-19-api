@@ -1,4 +1,4 @@
-package global
+package greece
 
 import (
 	"context"
@@ -32,8 +32,10 @@ func List(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]inter
 	filter["date"] = bson.M{"$gte": date}
 
 	// set country filter if exists in query param
-	if opts.ISO3 != "" {
-		filter["iso3"] = strings.ToUpper(opts.ISO3)
+	if opts.UID != "" {
+		if !strings.Contains(opts.UID, "all") {
+			filter["uid"] = strings.ToUpper(opts.UID)
+		}
 	}
 
 	// build date limit query
@@ -63,7 +65,7 @@ func List(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]inter
 	}
 
 	// set find options
-	findOptions := options.Find().SetSort(bson.D{{"date", 1}, {"iso3", 1}})
+	findOptions := options.Find().SetSort(bson.D{{"date", 1}, {"uid", 1}})
 
 	// decode to list
 	var list []*map[string]interface{}
@@ -85,8 +87,8 @@ func List(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]inter
 		return nil
 	}
 
-	if err := dbConn.Execute("global", f); err != nil {
-		return nil, errors.Wrap(err, "db.global.find()")
+	if err := dbConn.Execute("greece", f); err != nil {
+		return nil, errors.Wrap(err, "db.greece.find()")
 	}
 
 	return list, nil
@@ -112,8 +114,10 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	filter["date"] = bson.M{"$gte": date}
 
 	// set country filter if exists in query param
-	if opts.ISO3 != "" {
-		filter["iso3"] = strings.ToUpper(opts.ISO3)
+	if opts.UID != "" {
+		if !strings.Contains(opts.UID, "all") {
+			filter["uid"] = strings.ToUpper(opts.UID)
+		}
 	}
 
 	// build date limit query
@@ -134,10 +138,10 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	group := bson.D{
 		{"_id", "$uid"},
 		{"uid", bson.D{{"$first", "$uid"}}},
-		{"iso2", bson.D{{"$first", "$iso2"}}},
-		{"iso3", bson.D{{"$first", "$iso3"}}},
+		{"geo_unit", bson.D{{"$first", "$geo_unit"}}},
+		{"state", bson.D{{"$first", "$state"}}},
 		{"loc", bson.D{{"$first", "$loc"}}},
-		{"country", bson.D{{"$first", "$country"}}},
+		{"region", bson.D{{"$first", "$region"}}},
 		{"sources", bson.D{{"$addToSet", "$source"}}},
 		{"population", bson.D{{"$first", "$population"}}},
 		{"dates", bson.D{{"$push", "$date"}}},
@@ -187,8 +191,8 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 		return nil
 	}
 
-	if err := dbConn.Execute("global", f); err != nil {
-		return nil, errors.Wrap(err, "db.global.agg()")
+	if err := dbConn.Execute("greece", f); err != nil {
+		return nil, errors.Wrap(err, "db.greece.agg()")
 	}
 
 	return list, nil

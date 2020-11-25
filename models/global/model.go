@@ -27,7 +27,8 @@ type Loc struct {
 type Global struct {
 	ID primitive.ObjectID `bson:"_id" json:"-"`
 	// covid related date
-	Date time.Time `bson:"date" json:"date,omitempty"`
+	Date          time.Time `bson:"date" json:"date,omitempty"`
+	LastUpdatedAt time.Time `bson:"last_updated_at" json:"last_updated_at,omitempty"`
 	// location data
 	UID        int32  `bson:"uid" json:"uid,omitempty"`
 	Country    string `bson:"country" json:"country,omitempty"`
