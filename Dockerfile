@@ -12,9 +12,6 @@ WORKDIR /go/src/github.com/cvcio/covid-19-api/
 COPY go.mod /go/src/github.com/cvcio/covid-19-api/
 COPY go.sum /go/src/github.com/cvcio/covid-19-api/
 
-# Get dependancies - will also be cached if we won't change mod/sum
-#RUN go mod vendor
-
 # COPY the source code
 COPY cmd/ /go/src/github.com/cvcio/covid-19-api/cmd/
 COPY models/ /go/src/github.com/cvcio/covid-19-api/models/
