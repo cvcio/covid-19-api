@@ -109,3 +109,40 @@ func (h *Global) Agg(c *gin.Context) {
 
 	return
 }
+
+// Sum Data
+func (h *Global) Sum(c *gin.Context) {
+	opts := global.NewListOpts()
+
+	if c.Param("country") != "" && strings.ToUpper(c.Param("country")) != "ALL" {
+		opts = append(opts, global.ISO3(c.Param("country")))
+	}
+
+	if c.Param("from") != "" {
+		t, err := time.Parse("2006-01-02", c.Param("from"))
+		if err == nil {
+			opts = append(opts, global.From(t))
+		}
+	}
+
+	if c.Param("to") != "" {
+		t, err := time.Parse("2006-01-02", c.Param("to"))
+		if err == nil {
+			opts = append(opts, global.To(t))
+		}
+	}
+
+	res, err := global.Sum(h.dbConn, opts...)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+
+	if res == nil {
+		c.JSON(404, errors.New("404 Not Found"))
+	} else {
+		c.JSON(200, res)
+	}
+
+	return
+}

@@ -87,6 +87,20 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
 	}
 
+	sumRoutes := router.Group("/total")
+	{
+		sumRoutes.GET("", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
+		sumRoutes.GET("/global", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
+		sumRoutes.GET("/global/:country", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
+		sumRoutes.GET("/global/:country/:from", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
+		sumRoutes.GET("/global/:country/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
+
+		sumRoutes.GET("/greece", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
+		sumRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
+		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
+		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
+	}
+
 	metaRoutes := router.Group("/meta")
 	{
 		metaRoutes.GET("/countries", cache.CachePage(storeCasce, 24*time.Hour, meta.List))

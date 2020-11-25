@@ -108,3 +108,40 @@ func (h *Greece) Agg(c *gin.Context) {
 
 	return
 }
+
+// Sum Data
+func (h *Greece) Sum(c *gin.Context) {
+	opts := greece.NewListOpts()
+
+	if c.Param("region") != "" && strings.ToUpper(c.Param("region")) != "ALL" {
+		opts = append(opts, greece.UID(c.Param("region")))
+	}
+
+	if c.Param("from") != "" {
+		t, err := time.Parse("2006-01-02", c.Param("from"))
+		if err == nil {
+			opts = append(opts, greece.From(t))
+		}
+	}
+
+	if c.Param("to") != "" {
+		t, err := time.Parse("2006-01-02", c.Param("to"))
+		if err == nil {
+			opts = append(opts, greece.To(t))
+		}
+	}
+
+	res, err := greece.Sum(h.dbConn, opts...)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+
+	if res == nil {
+		c.JSON(404, errors.New("404 Not Found"))
+	} else {
+		c.JSON(200, res)
+	}
+
+	return
+}

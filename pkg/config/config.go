@@ -21,7 +21,7 @@ type Config struct {
 	}
 	Mongo struct {
 		URL         string        `envconfig:"MONGO_URL" default:"mongodb://localhost:27017"`
-		Path        string        `envconfig:"MONGO_PATH" default:"database"`
+		Path        string        `envconfig:"MONGO_PATH" default:"covid19"`
 		User        string        `envconfig:"MONGO_USER" default:""`
 		Pass        string        `envconfig:"MONGO_PASS" default:""`
 		DialTimeout time.Duration `envconfig:"DIAL_TIMEOUT" default:"30s"`
