@@ -152,6 +152,8 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 			}
 		}
 	} else {
+		group = append(group, bson.E{"new_cases", bson.D{{"$push", "$new_cases"}}})
+		group = append(group, bson.E{"new_deaths", bson.D{{"$push", "$new_deaths"}}})
 		group = append(group, bson.E{"cases", bson.D{{"$push", "$cases"}}})
 		group = append(group, bson.E{"deaths", bson.D{{"$push", "$deaths"}}})
 		group = append(group, bson.E{"recovered", bson.D{{"$push", "$recovered"}}})
