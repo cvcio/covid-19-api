@@ -140,7 +140,8 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 		{"country", bson.D{{"$first", "$country"}}},
 		{"sources", bson.D{{"$addToSet", "$source"}}},
 		{"population", bson.D{{"$first", "$population"}}},
-		{"dates", bson.D{{"$push", "$date"}}},
+		{"from", bson.D{{"$first", "$date"}}},
+		{"to", bson.D{{"$last", "$date"}}},
 	}
 	if !strings.Contains(opts.Keys, "all") && opts.Keys != "" {
 		// validate fileds
