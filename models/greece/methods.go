@@ -146,6 +146,7 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 		{"population", bson.D{{"$first", "$population"}}},
 		{"from", bson.D{{"$first", "$date"}}},
 		{"to", bson.D{{"$last", "$date"}}},
+		{"last_updated_at", bson.D{{"$last", "$last_updated_at"}}},
 	}
 	if !strings.Contains(opts.Keys, "all") && opts.Keys != "" {
 		// validate fileds
@@ -251,6 +252,7 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 		{"region", bson.D{{"$first", "$region"}}},
 		{"sources", bson.D{{"$addToSet", "$source"}}},
 		{"population", bson.D{{"$first", "$population"}}},
+		{"last_updated_at", bson.D{{"$last", "$last_updated_at"}}},
 	}
 
 	group = append(group, bson.E{"total_cases", bson.D{{"$last", "$cases"}}})
