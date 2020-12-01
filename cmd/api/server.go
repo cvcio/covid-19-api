@@ -67,7 +67,7 @@ func main() {
 	// Memory Storage
 	// ============================================================
 	// req cache
-	storeCache := persistence.NewRedisCacheWithPool(redisPool.Pool, 60*time.Minute)
+	storeCache := persistence.NewRedisCacheWithPool(redisPool.Pool, 15*time.Minute)
 	storeCache.Flush()
 	// limits
 	storeLimits, err := sredis.NewStoreWithOptions(redisClient.Client, limiter.StoreOptions{
