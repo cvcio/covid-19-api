@@ -15,6 +15,7 @@ var (
 		"incidence_rate", "source", "cumulative_rtpcr_tests_raw",
 		"estimated_new_rtpcr_tests", "cumulative_rapid_tests_raw",
 		"esitmated_new_rapid_tests", "estimated_new_total_tests",
+		"new_tests",
 	}
 )
 
