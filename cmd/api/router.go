@@ -41,7 +41,7 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		router.Use(middleware.EnableCORS("*"))
 	} else {
 		gin.SetMode(gin.ReleaseMode)
-		router.Use(middleware.EnableCORS(" *." + cfg.Server.DomainName))
+		router.Use(middleware.EnableCORS("*"))
 	}
 
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
