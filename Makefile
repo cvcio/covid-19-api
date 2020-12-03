@@ -1,4 +1,3 @@
-REGISTRY=reg.plagiari.sm
 PROJECT=covid-19-api
 TAG:=$(shell git rev-parse HEAD)
 BRANCH:=$(shell git rev-parse --abbrev-ref HEAD)
@@ -33,16 +32,7 @@ vendor:
 
 .PHONY: docker
 docker: linux vendor
-	docker build -t $(REGISTRY)/$(PROJECT):$(VERSION) -f Dockerfile .
-
-docker-push:
-	docker push $(REGISTRY)/$(PROJECT):$(VERSION)
-
-docker-release: linux vendor
-	docker build -t $(REGISTRY)/$(PROJECT):$(TAG) -f Dockerfile .
-	docker tag $(REGISTRY)/$(PROJECT):$(TAG) $(REGISTRY)/$(PROJECT):$(BRANCH) 
-	docker push $(REGISTRY)/$(PROJECT):$(TAG)
-	docker push $(REGISTRY)/$(PROJECT):$(BRANCH) 
+	docker build -t $(PROJECT):$(VERSION) -f Dockerfile .
 
 db-start:
 	docker-compose up -d
@@ -61,17 +51,9 @@ lint:
 clean-mongo:
 	docker-compose stop mongo
 	docker-compose rm -f -v mongo
-	docker volume rm -f infoflow_data_mongo
+	docker volume rm -f data_mongo
 
 clean-db: clean-mongo
-
-prod:
-	go mod vendor
-	cp cmd/${APP}/Dockerfile.$(APP) .
-	docker build -f Dockerfile.${APP} --rm -t ${APP}:$(TAG) .
-	@chmod +x cmd/${APP}/deploy.sh
-	NAME=${APP} REPO=$(REGISTRY) PROJECT=$(PROJECT) CIRCLE_SHA1=$(TAG) CIRCLE_BRANCH=$(BRANCH) cmd/${APP}/deploy.sh
-	rm Dockerfile.${APP}
 
 # This included makefile should define the 'custom' target rule which is called here.
 include $(INCLUDE_MAKEFILE)
