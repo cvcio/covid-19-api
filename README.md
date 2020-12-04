@@ -391,43 +391,43 @@ curl -XGET https://covid.cvcio.org/greece/EL122/cases/2020-10-01/2020-11-31
 ###### Global Total Data (Beta)
 
 ```bash
-GET /total/global/:country/:keys/:from/:to
+GET /total/global/:country/:from/:to
 
 # ex. get total recovered cases for all countries,
 # from the begining of the pandemic.
-curl -XGET https://covid.cvcio.org/total/global/all/cases/2020-10-01
+curl -XGET https://covid.cvcio.org/total/global/all/2020-10-01
 ```
 
 ###### Greece Total Data (Beta)
 
 ```bash
-GET /total/greece/:region/:keys/:from/:to
+GET /total/greece/:region/:from/:to
 
 # ex. get total imported (detected at the entry points) cases just for today
-curl -XGET https://covid.cvcio.org/total/greece/EL001/cases
+curl -XGET https://covid.cvcio.org/total/greece/EL001
 ```
 
 ###### Global Aggregated Data (Beta)
 
 ```bash
-GET /agg/global/:country/:from/:to
+GET /agg/global/:country/:keys/:from/:to
 
 # ex. get all aggregated data for Greece, from
 # the begining of the pandemic
-curl -XGET https://covid.cvcio.org/agg/global/GRC/2020-01-01
+curl -XGET https://covid.cvcio.org/agg/global/GRC/all/2020-01-01
 ```
 
 ###### Greece Aggregated Data (Beta)
 
 ```bash
-GET /agg/greece/:region/:from/:to
+GET /agg/greece/:region/:keys/:from/:to
 
 # ex. get all aggregated data for Attica region, from
 # the begining of the pandemic
-curl -XGET https://covid.cvcio.org/agg/greece/EL300/2020-01-01
+curl -XGET https://covid.cvcio.org/agg/greece/EL300/all/2020-01-01
 ```
 
-*Note: the aggregated data endpoint doesn't include the `:keys` parameter*
+*Note: the `total` endpoint doesn't include the `:keys` parameter*
 
 ## Rate Limiting
 
