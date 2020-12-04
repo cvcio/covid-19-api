@@ -50,61 +50,53 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 	// handlers
 	global := handlers.NewGlobalHandler(cfg, dbConn, logger)
 	greece := handlers.NewGreeceHandler(cfg, dbConn, logger)
-	meta := handlers.NewGlobalHandler(cfg, dbConn, logger)
-
 	// routes
 	globalRoutes := router.Group("/global")
 	{
-		globalRoutes.GET("", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		globalRoutes.GET("/:country", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		globalRoutes.GET("/:country/:keys", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		globalRoutes.GET("/:country/:keys/:from", cache.CachePage(storeCasce, 2*time.Hour, global.List))
-		globalRoutes.GET("/:country/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, global.List))
+		globalRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, global.List))
+		globalRoutes.GET("/:country", cache.CachePage(storeCasce, 15*time.Minute, global.List))
+		globalRoutes.GET("/:country/:keys", cache.CachePage(storeCasce, 15*time.Minute, global.List))
+		globalRoutes.GET("/:country/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, global.List))
+		globalRoutes.GET("/:country/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, global.List))
 	}
 
 	greeceRoutes := router.Group("/greece")
 	{
-		greeceRoutes.GET("", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		greeceRoutes.GET("/:region", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		greeceRoutes.GET("/:region/:keys", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		greeceRoutes.GET("/:region/:keys/:from", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
-		greeceRoutes.GET("/:region/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.List))
+		greeceRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
+		greeceRoutes.GET("/:region", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
+		greeceRoutes.GET("/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
+		greeceRoutes.GET("/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
+		greeceRoutes.GET("/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
 	}
 
 	totalRoutes := router.Group("/agg")
 	{
-		totalRoutes.GET("", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
-		totalRoutes.GET("/global", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
-		totalRoutes.GET("/global/:country", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
-		totalRoutes.GET("/global/:country/:keys", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
-		totalRoutes.GET("/global/:country/:keys/:from", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
-		totalRoutes.GET("/global/:country/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, global.Agg))
+		totalRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
+		totalRoutes.GET("/global", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
+		totalRoutes.GET("/global/:country", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
+		totalRoutes.GET("/global/:country/:keys", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
+		totalRoutes.GET("/global/:country/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
+		totalRoutes.GET("/global/:country/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
 
-		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
-		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
-		totalRoutes.GET("/greece/:region/:keys", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
-		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
-		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.Agg))
+		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
+		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
+		totalRoutes.GET("/greece/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
 	}
 
 	sumRoutes := router.Group("/total")
 	{
-		sumRoutes.GET("", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
-		sumRoutes.GET("/global", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
-		sumRoutes.GET("/global/:country", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
-		sumRoutes.GET("/global/:country/:from", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
-		sumRoutes.GET("/global/:country/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, global.Sum))
+		sumRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
+		sumRoutes.GET("/global", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
+		sumRoutes.GET("/global/:country", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
+		sumRoutes.GET("/global/:country/:from", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
+		sumRoutes.GET("/global/:country/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
 
-		sumRoutes.GET("/greece", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
-		sumRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
-		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
-		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 2*time.Hour, greece.Sum))
-	}
-
-	metaRoutes := router.Group("/meta")
-	{
-		metaRoutes.GET("/countries", cache.CachePage(storeCasce, 24*time.Hour, meta.List))
-		metaRoutes.GET("/routes", cache.CachePage(storeCasce, 24*time.Hour, meta.List))
+		sumRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
+		sumRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
+		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
+		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
 	}
 
 	// Forbid Access
