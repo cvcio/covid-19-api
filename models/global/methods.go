@@ -254,11 +254,12 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	group = append(group, bson.E{"total_recovered", bson.D{{"$last", "$recovered"}}})
 	group = append(group, bson.E{"total_active", bson.D{{"$last", "$active"}}})
 	group = append(group, bson.E{"total_critical", bson.D{{"$last", "$critical"}}})
-	group = append(group, bson.E{"total_tests", bson.D{{"$sum", "$tests"}}})
+	group = append(group, bson.E{"total_tests", bson.D{{"$last", "$tests"}}})
 
 	group = append(group, bson.E{"cases", bson.D{{"$sum", "$new_cases"}}})
 	group = append(group, bson.E{"deaths", bson.D{{"$sum", "$new_deaths"}}})
 	group = append(group, bson.E{"recovered", bson.D{{"$sum", "$new_recovered"}}})
+	group = append(group, bson.E{"tests", bson.D{{"$sum", "$new_tests"}}})
 	// set agg options
 	o := options.Aggregate()
 

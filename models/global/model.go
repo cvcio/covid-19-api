@@ -12,10 +12,10 @@ var (
 		"population", "cases", "deaths", "recovered",
 		"active", "critical", "tests", "new_cases",
 		"new_deaths", "new_recovered", "case_fatality_ratio",
-		"incidence_rate", "source", "cumulative_rtpcr_tests_raw",
-		"estimated_new_rtpcr_tests", "cumulative_rapid_tests_raw",
-		"esitmated_new_rapid_tests", "estimated_new_total_tests",
-		"new_tests",
+		"incidence_rate", "source",
+		"tests", "new_tests",
+		"tests_rtpcr", "new_tests_rtpcr",
+		"tests_rapid", "new_tests_rapid",
 	}
 )
 
