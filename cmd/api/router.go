@@ -48,55 +48,77 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 	router.Use(limiterMiddleware)
 
 	// handlers
-	global := handlers.NewGlobalHandler(cfg, dbConn, logger)
-	greece := handlers.NewGreeceHandler(cfg, dbConn, logger)
+	glCovid := handlers.NewGlobalHandler(cfg, dbConn, logger)
+	grCovid := handlers.NewGreeceHandler(cfg, dbConn, logger)
+	grVaccines := handlers.NewGRVaccinesHandler(cfg, dbConn, logger)
+
 	// routes
-	globalRoutes := router.Group("/global")
+	glCovidRoutes := router.Group("/global")
 	{
-		globalRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, global.List))
-		globalRoutes.GET("/:country", cache.CachePage(storeCasce, 15*time.Minute, global.List))
-		globalRoutes.GET("/:country/:keys", cache.CachePage(storeCasce, 15*time.Minute, global.List))
-		globalRoutes.GET("/:country/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, global.List))
-		globalRoutes.GET("/:country/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, global.List))
+		glCovidRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, glCovid.List))
+		glCovidRoutes.GET("/:country", cache.CachePage(storeCasce, 15*time.Minute, glCovid.List))
+		glCovidRoutes.GET("/:country/:keys", cache.CachePage(storeCasce, 15*time.Minute, glCovid.List))
+		glCovidRoutes.GET("/:country/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, glCovid.List))
+		glCovidRoutes.GET("/:country/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, glCovid.List))
 	}
 
-	greeceRoutes := router.Group("/greece")
+	grCovidRoutes := router.Group("/greece")
 	{
-		greeceRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
-		greeceRoutes.GET("/:region", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
-		greeceRoutes.GET("/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
-		greeceRoutes.GET("/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
-		greeceRoutes.GET("/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, greece.List))
+		grCovidRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, grCovid.List))
+		grCovidRoutes.GET("/:region", cache.CachePage(storeCasce, 15*time.Minute, grCovid.List))
+		grCovidRoutes.GET("/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, grCovid.List))
+		grCovidRoutes.GET("/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, grCovid.List))
+		grCovidRoutes.GET("/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grCovid.List))
+	}
+
+	grVaccinesRoutes := router.Group("/gr_vaccines")
+	{
+		grVaccinesRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.List))
+		grVaccinesRoutes.GET("/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.List))
+		grVaccinesRoutes.GET("/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.List))
+		grVaccinesRoutes.GET("/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.List))
+		grVaccinesRoutes.GET("/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.List))
 	}
 
 	totalRoutes := router.Group("/agg")
 	{
-		totalRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
-		totalRoutes.GET("/global", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
-		totalRoutes.GET("/global/:country", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
-		totalRoutes.GET("/global/:country/:keys", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
-		totalRoutes.GET("/global/:country/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
-		totalRoutes.GET("/global/:country/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, global.Agg))
+		totalRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Agg))
+		totalRoutes.GET("/global", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Agg))
+		totalRoutes.GET("/global/:country", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Agg))
+		totalRoutes.GET("/global/:country/:keys", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Agg))
+		totalRoutes.GET("/global/:country/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Agg))
+		totalRoutes.GET("/global/:country/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Agg))
 
-		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
-		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
-		totalRoutes.GET("/greece/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
-		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
-		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, greece.Agg))
+		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Agg))
+		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Agg))
+		totalRoutes.GET("/greece/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Agg))
+
+		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/greece/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
 	}
 
 	sumRoutes := router.Group("/total")
 	{
-		sumRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
-		sumRoutes.GET("/global", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
-		sumRoutes.GET("/global/:country", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
-		sumRoutes.GET("/global/:country/:from", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
-		sumRoutes.GET("/global/:country/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, global.Sum))
+		sumRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Sum))
+		sumRoutes.GET("/global", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Sum))
+		sumRoutes.GET("/global/:country", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Sum))
+		sumRoutes.GET("/global/:country/:from", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Sum))
+		sumRoutes.GET("/global/:country/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, glCovid.Sum))
 
-		sumRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
-		sumRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
-		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
-		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, greece.Sum))
+		sumRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Sum))
+		sumRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Sum))
+		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Sum))
+		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Sum))
+
+		sumRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
+		sumRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
+		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
+		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
 	}
 
 	// Forbid Access
