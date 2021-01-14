@@ -296,7 +296,7 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	}
 
 	if err := dbConn.Execute("greece", f); err != nil {
-		return nil, errors.Wrap(err, "db.greece.agg()")
+		return nil, errors.Wrap(err, "db.greece.sum()")
 	}
 
 	return list, nil

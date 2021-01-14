@@ -71,7 +71,7 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		grCovidRoutes.GET("/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grCovid.List))
 	}
 
-	grVaccinesRoutes := router.Group("/gr_vaccines")
+	grVaccinesRoutes := router.Group("/vaccines/greece")
 	{
 		grVaccinesRoutes.GET("", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.List))
 		grVaccinesRoutes.GET("/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.List))
@@ -95,11 +95,11 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Agg))
 		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Agg))
 
-		totalRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
-		totalRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
-		totalRoutes.GET("/greece/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
-		totalRoutes.GET("/greece/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
-		totalRoutes.GET("/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/vaccines/greece", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/vaccines/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/vaccines/greece/:region/:keys", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/vaccines/greece/:region/:keys/:from", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
+		totalRoutes.GET("/vaccines/greece/:region/:keys/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Agg))
 	}
 
 	sumRoutes := router.Group("/total")
@@ -115,10 +115,10 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Sum))
 		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grCovid.Sum))
 
-		sumRoutes.GET("/greece", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
-		sumRoutes.GET("/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
-		sumRoutes.GET("/greece/:region/:from", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
-		sumRoutes.GET("/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
+		sumRoutes.GET("/vaccines/greece", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
+		sumRoutes.GET("/vaccines/greece/:region", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
+		sumRoutes.GET("/vaccines/greece/:region/:from", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
+		sumRoutes.GET("/vaccines/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
 	}
 
 	// Forbid Access

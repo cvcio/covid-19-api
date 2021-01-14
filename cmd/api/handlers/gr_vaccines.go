@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cvcio/covid-19-api/models/greece"
+	"github.com/cvcio/covid-19-api/models/gr_vaccines"
 	"github.com/cvcio/covid-19-api/pkg/config"
 	"github.com/cvcio/covid-19-api/pkg/db"
 	"github.com/gin-gonic/gin"
@@ -30,31 +30,31 @@ func NewGRVaccinesHandler(cfg *config.Config, db *db.DB, logger *zap.Logger) *GR
 
 // List Data
 func (h *GRVaccines) List(c *gin.Context) {
-	opts := greece.NewListOpts()
+	opts := gr_vaccines.NewListOpts()
 
 	if c.Param("region") != "" && strings.ToUpper(c.Param("region")) != "ALL" {
-		opts = append(opts, greece.UID(c.Param("region")))
+		opts = append(opts, gr_vaccines.UID(c.Param("region")))
 	}
 
 	if c.Param("keys") != "" {
-		opts = append(opts, greece.Keys(c.Param("keys")))
+		opts = append(opts, gr_vaccines.Keys(c.Param("keys")))
 	}
 
 	if c.Param("from") != "" {
 		t, err := time.Parse("2006-01-02", c.Param("from"))
 		if err == nil {
-			opts = append(opts, greece.From(t))
+			opts = append(opts, gr_vaccines.From(t))
 		}
 	}
 
 	if c.Param("to") != "" {
 		t, err := time.Parse("2006-01-02", c.Param("to"))
 		if err == nil {
-			opts = append(opts, greece.To(t))
+			opts = append(opts, gr_vaccines.To(t))
 		}
 	}
 
-	res, err := greece.List(h.dbConn, opts...)
+	res, err := gr_vaccines.List(h.dbConn, opts...)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
@@ -70,31 +70,31 @@ func (h *GRVaccines) List(c *gin.Context) {
 
 // Agg Aggregate Data
 func (h *GRVaccines) Agg(c *gin.Context) {
-	opts := greece.NewListOpts()
+	opts := gr_vaccines.NewListOpts()
 
 	if c.Param("region") != "" && strings.ToUpper(c.Param("region")) != "ALL" {
-		opts = append(opts, greece.UID(c.Param("region")))
+		opts = append(opts, gr_vaccines.UID(c.Param("region")))
 	}
 
 	if c.Param("keys") != "" {
-		opts = append(opts, greece.Keys(c.Param("keys")))
+		opts = append(opts, gr_vaccines.Keys(c.Param("keys")))
 	}
 
 	if c.Param("from") != "" {
 		t, err := time.Parse("2006-01-02", c.Param("from"))
 		if err == nil {
-			opts = append(opts, greece.From(t))
+			opts = append(opts, gr_vaccines.From(t))
 		}
 	}
 
 	if c.Param("to") != "" {
 		t, err := time.Parse("2006-01-02", c.Param("to"))
 		if err == nil {
-			opts = append(opts, greece.To(t))
+			opts = append(opts, gr_vaccines.To(t))
 		}
 	}
 
-	res, err := greece.Agg(h.dbConn, opts...)
+	res, err := gr_vaccines.Agg(h.dbConn, opts...)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
@@ -111,27 +111,27 @@ func (h *GRVaccines) Agg(c *gin.Context) {
 
 // Sum Data
 func (h *GRVaccines) Sum(c *gin.Context) {
-	opts := greece.NewListOpts()
+	opts := gr_vaccines.NewListOpts()
 
 	if c.Param("region") != "" && strings.ToUpper(c.Param("region")) != "ALL" {
-		opts = append(opts, greece.UID(c.Param("region")))
+		opts = append(opts, gr_vaccines.UID(c.Param("region")))
 	}
 
 	if c.Param("from") != "" {
 		t, err := time.Parse("2006-01-02", c.Param("from"))
 		if err == nil {
-			opts = append(opts, greece.From(t))
+			opts = append(opts, gr_vaccines.From(t))
 		}
 	}
 
 	if c.Param("to") != "" {
 		t, err := time.Parse("2006-01-02", c.Param("to"))
 		if err == nil {
-			opts = append(opts, greece.To(t))
+			opts = append(opts, gr_vaccines.To(t))
 		}
 	}
 
-	res, err := greece.Sum(h.dbConn, opts...)
+	res, err := gr_vaccines.Sum(h.dbConn, opts...)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return

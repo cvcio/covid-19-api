@@ -1,4 +1,4 @@
-package global
+package gr_vaccines
 
 import (
 	"context"
@@ -32,8 +32,10 @@ func List(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]inter
 	filter["date"] = bson.M{"$gte": date}
 
 	// set country filter if exists in query param
-	if opts.ISO3 != "" {
-		filter["iso3"] = strings.ToUpper(opts.ISO3)
+	if opts.UID != "" {
+		if !strings.Contains(opts.UID, "all") {
+			filter["uid"] = strings.ToUpper(opts.UID)
+		}
 	}
 
 	// build date limit query
@@ -63,7 +65,7 @@ func List(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]inter
 	}
 
 	// set find options
-	findOptions := options.Find().SetSort(bson.D{{"date", 1}, {"iso3", 1}})
+	findOptions := options.Find().SetSort(bson.D{{"date", 1}, {"uid", 1}})
 
 	// decode to list
 	var list []*map[string]interface{}
@@ -85,8 +87,8 @@ func List(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]inter
 		return nil
 	}
 
-	if err := dbConn.Execute("global", f); err != nil {
-		return nil, errors.Wrap(err, "db.global.find()")
+	if err := dbConn.Execute("gr_vaccines", f); err != nil {
+		return nil, errors.Wrap(err, "db.gr_vaccines.find()")
 	}
 
 	return list, nil
@@ -112,8 +114,10 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	filter["date"] = bson.M{"$gte": date}
 
 	// set country filter if exists in query param
-	if opts.ISO3 != "" {
-		filter["iso3"] = strings.ToUpper(opts.ISO3)
+	if opts.UID != "" {
+		if !strings.Contains(opts.UID, "all") {
+			filter["uid"] = strings.ToUpper(opts.UID)
+		}
 	}
 
 	// build date limit query
@@ -134,10 +138,10 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	group := bson.D{
 		{"_id", "$uid"},
 		{"uid", bson.D{{"$first", "$uid"}}},
-		{"iso2", bson.D{{"$first", "$iso2"}}},
-		{"iso3", bson.D{{"$first", "$iso3"}}},
+		{"geo_unit", bson.D{{"$first", "$geo_unit"}}},
+		{"state", bson.D{{"$first", "$state"}}},
 		{"loc", bson.D{{"$first", "$loc"}}},
-		{"country", bson.D{{"$first", "$country"}}},
+		{"region", bson.D{{"$first", "$region"}}},
 		{"sources", bson.D{{"$addToSet", "$source"}}},
 		{"population", bson.D{{"$first", "$population"}}},
 		{"from", bson.D{{"$first", "$date"}}},
@@ -153,14 +157,14 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 			}
 		}
 	} else {
-		group = append(group, bson.E{"new_cases", bson.D{{"$push", "$new_cases"}}})
-		group = append(group, bson.E{"new_deaths", bson.D{{"$push", "$new_deaths"}}})
-		group = append(group, bson.E{"cases", bson.D{{"$push", "$cases"}}})
-		group = append(group, bson.E{"deaths", bson.D{{"$push", "$deaths"}}})
-		group = append(group, bson.E{"recovered", bson.D{{"$push", "$recovered"}}})
-		group = append(group, bson.E{"active", bson.D{{"$push", "$active"}}})
-		group = append(group, bson.E{"critical", bson.D{{"$push", "$critical"}}})
+		group = append(group, bson.E{"day_diff", bson.D{{"$push", "$day_diff"}}})
+		group = append(group, bson.E{"day_total", bson.D{{"$push", "$day_total"}}})
+		group = append(group, bson.E{"total_distinct_persons", bson.D{{"$push", "$total_distinct_persons"}}})
+		group = append(group, bson.E{"total_vaccinations", bson.D{{"$push", "$total_vaccinations"}}})
+		group = append(group, bson.E{"new_total_distinct_persons", bson.D{{"$push", "$new_total_distinct_persons"}}})
+		group = append(group, bson.E{"new_total_vaccinations", bson.D{{"$push", "$new_total_vaccinations"}}})
 	}
+
 	// set agg options
 	o := options.Aggregate()
 
@@ -191,8 +195,8 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 		return nil
 	}
 
-	if err := dbConn.Execute("global", f); err != nil {
-		return nil, errors.Wrap(err, "db.global.agg()")
+	if err := dbConn.Execute("gr_vaccines", f); err != nil {
+		return nil, errors.Wrap(err, "db.gr_vaccines.agg()")
 	}
 
 	return list, nil
@@ -218,8 +222,10 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	filter["date"] = bson.M{"$gte": date}
 
 	// set country filter if exists in query param
-	if opts.ISO3 != "" {
-		filter["iso3"] = strings.ToUpper(opts.ISO3)
+	if opts.UID != "" {
+		if !strings.Contains(opts.UID, "all") {
+			filter["uid"] = strings.ToUpper(opts.UID)
+		}
 	}
 
 	// build date limit query
@@ -240,26 +246,24 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	group := bson.D{
 		{"_id", "$uid"},
 		{"uid", bson.D{{"$first", "$uid"}}},
-		{"iso2", bson.D{{"$first", "$iso2"}}},
-		{"iso3", bson.D{{"$first", "$iso3"}}},
+		{"geo_unit", bson.D{{"$first", "$geo_unit"}}},
+		{"state", bson.D{{"$first", "$state"}}},
 		{"loc", bson.D{{"$first", "$loc"}}},
-		{"country", bson.D{{"$first", "$country"}}},
+		{"region", bson.D{{"$first", "$region"}}},
 		{"sources", bson.D{{"$addToSet", "$source"}}},
 		{"population", bson.D{{"$first", "$population"}}},
 		{"last_updated_at", bson.D{{"$last", "$last_updated_at"}}},
 	}
 
-	group = append(group, bson.E{"total_cases", bson.D{{"$last", "$cases"}}})
-	group = append(group, bson.E{"total_deaths", bson.D{{"$last", "$deaths"}}})
-	group = append(group, bson.E{"total_recovered", bson.D{{"$last", "$recovered"}}})
-	group = append(group, bson.E{"total_active", bson.D{{"$last", "$active"}}})
-	group = append(group, bson.E{"total_critical", bson.D{{"$last", "$critical"}}})
-	group = append(group, bson.E{"total_tests", bson.D{{"$last", "$tests"}}})
+	group = append(group, bson.E{"total_distinct_persons", bson.D{{"$last", "$total_distinct_persons"}}})
+	group = append(group, bson.E{"total_vaccinations", bson.D{{"$last", "$total_vaccinations"}}})
 
-	group = append(group, bson.E{"cases", bson.D{{"$sum", "$new_cases"}}})
-	group = append(group, bson.E{"deaths", bson.D{{"$sum", "$new_deaths"}}})
-	group = append(group, bson.E{"recovered", bson.D{{"$sum", "$new_recovered"}}})
-	group = append(group, bson.E{"tests", bson.D{{"$sum", "$new_tests"}}})
+	group = append(group, bson.E{"day_diff", bson.D{{"$sum", "$day_diff"}}})
+	group = append(group, bson.E{"day_total", bson.D{{"$sum", "$day_total"}}})
+
+	group = append(group, bson.E{"new_total_distinct_persons", bson.D{{"$sum", "$new_total_distinct_persons"}}})
+	group = append(group, bson.E{"new_total_vaccinations", bson.D{{"$sum", "$new_total_vaccinations"}}})
+
 	// set agg options
 	o := options.Aggregate()
 
@@ -290,8 +294,8 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 		return nil
 	}
 
-	if err := dbConn.Execute("global", f); err != nil {
-		return nil, errors.Wrap(err, "db.global.sum()")
+	if err := dbConn.Execute("gr_vaccines", f); err != nil {
+		return nil, errors.Wrap(err, "db.gr_vaccines.sum()")
 	}
 
 	return list, nil
