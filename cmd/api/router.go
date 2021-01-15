@@ -121,11 +121,55 @@ func NewAPI(cfg *config.Config, dbConn *db.DB, storeLimits limiter.Store, storeC
 		sumRoutes.GET("/vaccines/greece/:region/:from/:to", cache.CachePage(storeCasce, 15*time.Minute, grVaccines.Sum))
 	}
 
-	// Forbid Access
+	// Return all avail endpoints
 	// This is usefull when you combine multiple microservices
 	router.NoRoute(func(c *gin.Context) {
-		c.String(http.StatusNotFound, "404 Not Found")
-		c.Abort()
+		c.IndentedJSON(200, gin.H{
+			"available_endpoints": []string{
+				"GET /global",
+				"GET /global/:country",
+				"GET /global/:country/:keys",
+				"GET /global/:country/:keys/:from",
+				"GET /global/:country/:keys/:from/:to",
+				"GET /greece",
+				"GET /greece/:region",
+				"GET /greece/:region/:keys",
+				"GET /greece/:region/:keys/:from",
+				"GET /greece/:region/:keys/:from/:to",
+				"GET /vaccines/greece",
+				"GET /vaccines/greece/:region",
+				"GET /vaccines/greece/:region/:keys",
+				"GET /vaccines/greece/:region/:keys/:from",
+				"GET /vaccines/greece/:region/:keys/:from/:to",
+				"GET /agg/global",
+				"GET /agg/global/:country",
+				"GET /agg/global/:country/:keys",
+				"GET /agg/global/:country/:keys/:from",
+				"GET /agg/global/:country/:keys/:from/:to",
+				"GET /agg/greece",
+				"GET /agg/greece/:region",
+				"GET /agg/greece/:region/:keys",
+				"GET /agg/greece/:region/:keys/:from",
+				"GET /agg/greece/:region/:keys/:from/:to",
+				"GET /agg/vaccines/greece",
+				"GET /agg/vaccines/greece/:region",
+				"GET /agg/vaccines/greece/:region/:keys",
+				"GET /agg/vaccines/greece/:region/:keys/:from",
+				"GET /agg/vaccines/greece/:region/:keys/:from/:to",
+				"GET /total/global",
+				"GET /total/global/:country",
+				"GET /total/global/:country/:from",
+				"GET /total/global/:country/:from/:to",
+				"GET /total/greece",
+				"GET /total/greece/:region",
+				"GET /total/greece/:region/:from",
+				"GET /total/greece/:region/:from/:to",
+				"GET /total/vaccines/greece",
+				"GET /total/vaccines/greece/:region",
+				"GET /total/vaccines/greece/:region/:from",
+				"GET /total/vaccines/greece/:region/:from/:to",
+			},
+		})
 	})
 
 	return router
