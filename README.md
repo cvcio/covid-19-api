@@ -8,9 +8,7 @@ In general, we collect data from [Johns Hopkins CSSE]((https://github.com/CSSEGI
 
 ## Public Endpoints
 
-We provide a public url for the API, but keep in mind that we limit up to **300 requests per minute** (read [Rate Limits](#rate-limiting))
-
-only for testing purposes only. You should use [iMEdD](https://github.com/iMEdD-Lab)'s public url in production, as they are responsible for the data.
+We provide a public url for the API, but keep in mind that we limit up to **300 requests per minute** (read [Rate Limits](#rate-limiting)).
 
 - https://covid.cvcio.org
 
