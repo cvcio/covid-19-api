@@ -388,7 +388,7 @@ The `agg` endpoint is still in active development and may change without further
 ###### Vaccines (Greece Only) Aggregated Data (Beta)
 
 ```json
-// GET /agg/greece/all/all/2020-11-22
+// GET /agg/vaccines/greece/all/all/2020-11-22
 [
     {
         "day_diff": [0, 0], // as provided by govgr
@@ -576,11 +576,11 @@ curl -XGET https://covid.cvcio.org/agg/greece/EL300/all/2020-01-01
 ###### Vaccines (Greece Only) Aggregated Data (Beta)
 
 ```bash
-GET /agg/greece/:region/:keys/:from/:to
+GET /agg/vaccines/greece/:region/:keys/:from/:to
 
 # ex. get all aggregated data for Thessaloniki region, from
 # the begining of the pandemic
-curl -XGET https://covid.cvcio.org/agg/greece/PE202/all/2020-01-01
+curl -XGET https://covid.cvcio.org/agg/vaccines/greece/PE202/all/2020-01-01
 ```
 
 *Note: the `total` endpoint doesn't include the `:keys` parameter*
