@@ -1,10 +1,10 @@
 # COVID&ndash;19 API
 
-> last updated at Dec 10, 2020
+> last updated at Jan 15, 2021
 
 COVID&ndash;19 API is open-source and developed by [Civic Information Office](https://cvcio.org/) in collaboration with [iMEdD](https://imedd.org/) to help academics, data scientists, journalists, the public, understand the COVID&ndash;19 outbreak in Greece (and worldwide), as the Greek government lacks transparency on this issue. This is an open-source project, so please contribute to make it better.
 
-In general, we collect data from [Johns Hopkins CSSE]((https://github.com/CSSEGISandData/COVID-19)) ~~and [WoldOMeter](https://www.worldometers.info/coronavirus/)~~ for the global collection, and from [iMEdD](https://github.com/iMEdD-Lab) for data related to Greece. Data updates run approximately every two hours, and every 15 minutes during 17:00-21:00 +2. You can read more about the data in [iMEdD](https://imedd.org/)'s [open-data relevant repository](https://github.com/iMEdD-Lab/open-data) or see in action the [COVID&ndash;19 Data Visualization Dashboard](https://lab.imedd.org/covid19/). If you are interested in the data collection mechanism you can refer to [COVID&ndash;19 automation](https://github.com/cvcio/covid-19-automation) service.
+In general, we collect data from [Johns Hopkins CSSE]((https://github.com/CSSEGISandData/COVID-19)) ~~and [WoldOMeter](https://www.worldometers.info/coronavirus/)~~ for the global collection, and from [iMEdD](https://github.com/iMEdD-Lab) for data related to Greece. Additionally, we retrieve vaccines related data from [Data GOV](https://data.gov.gr/datasets/mdg_emvolio/). Data updates run approximately every two hours, and every 15 minutes during 17:00-21:00 +2. You can read more about the data in [iMEdD](https://imedd.org/)'s [open-data relevant repository](https://github.com/iMEdD-Lab/open-data) or see in action the [COVID&ndash;19 Data Visualization Dashboard](https://lab.imedd.org/covid19/). If you are interested in the data collection mechanism you can refer to [COVID&ndash;19 automation](https://github.com/cvcio/covid-19-automation) service.
 
 ## Public Endpoints
 
@@ -14,7 +14,7 @@ We provide a public url for the API only for testing purposes only. You should u
 
 ## Data Format
 
-Data format may vary accross documents as we enrich data related to Greece. In general we serve 3 different endpoints -raw, total and aggregared- for 2 different levels -global, greece. We are working to introducing even more.
+Data format may vary accross documents as we enrich data related to Greece. In general we serve 3 different endpoints -raw, total and aggregared- for 3 different levels -global, greece and vaccines. We are working to introducing even more.
 
 ###### Raw Global Data
 
@@ -138,7 +138,43 @@ Retrieve raw data from the **greece** collection. If no `:from` it will return t
 ]
 ```
 
-###### Global Total Data (Beta)
+###### Raw Vaccines (Greece Only) Data
+
+Retrieve raw data from the **vaccines** collection. If no `:from` it will return the last saved date.
+
+```json
+// GET /vaccines/greece/all/all/2020-12-01
+[
+    {
+        "area": "ΑΡΓΟΛΙΔΑΣ", // as provided by govgr
+        "areaid": 1001, // as provided by govgr
+        "date": "2020-12-27T02:00:00+02:00",
+        "day_diff": 0, // as provided by govgr
+        "day_total": 0, // as provided by govgr
+        "geo_unit": "Peloponnese",
+        "last_updated_at": "2021-01-15T12:18:34.752+02:00",
+        "loc": {
+            "coordinates": [
+                22.858217,
+                37.6525404
+            ],
+            "type": "Point"
+        },
+        "new_total_distinct_persons": 0,
+        "new_total_vaccinations": 0,
+        "population": 97044,
+        "region": "Argolis",
+        "source": "govgr",
+        "state": "Peloponnese",
+        "total_distinct_persons": 0, // as provided by govgr
+        "total_vaccinations": 0, // as provided by govgr
+        "uid": "PE1001"
+    },
+    (...)
+]
+```
+
+###### Global Total Data
 
 The `total` endpoint is still in active development and may change without further notice.
 
@@ -205,7 +241,7 @@ The `total` endpoint is still in active development and may change without furth
 ]
 ```
 
-###### Greece Total Data (Beta)
+###### Greece Total Data
 
 ```json
 // GET /total/greece
@@ -235,6 +271,41 @@ The `total` endpoint is still in active development and may change without furth
         "total_deaths": 184,
         "total_recovered": null,
         "uid": "EL122"
+    },
+    (...)
+]
+```
+
+###### Vaccines (Greece Only) Total Data (Beta)
+
+```json
+// GET total/vaccines/greece/all/2020-12-27
+[
+    {
+        "day_diff": 0, // as provided by govgr
+        "day_total": 0, // as provided by govgr
+        "from": "2020-12-27T02:00:00+02:00",
+        "geo_unit": "Aegean",
+        "last_updated_at": "2021-01-15T12:18:34.752+02:00",
+        "loc": {
+            "coordinates": [
+                25.125567999999998,
+                37.0651291
+            ],
+            "type": "Point"
+        },
+        "new_total_distinct_persons": 0,
+        "new_total_vaccinations": 0,
+        "population": 14926,
+        "region": "Paros",
+        "sources": [
+            "govgr"
+        ],
+        "state": "South Aegean",
+        "to": "2021-01-14T02:00:00+02:00",
+        "total_distinct_persons": 0, // as provided by govgr
+        "total_vaccinations": 0, // as provided by govgr
+        "uid": "PE1210"
     },
     (...)
 ]
@@ -314,11 +385,46 @@ The `agg` endpoint is still in active development and may change without further
 ]
 ```
 
+###### Vaccines (Greece Only) Aggregated Data (Beta)
+
+```json
+// GET /agg/greece/all/all/2020-11-22
+[
+    {
+        "day_diff": [0, 0], // as provided by govgr
+        "day_total": [0, 0], // as provided by govgr
+        "from": "2021-01-13T02:00:00+02:00",
+        "geo_unit": "Aegean",
+        "last_updated_at": "2021-01-15T12:18:34.752+02:00",
+        "loc": {
+            "coordinates": [
+                25.125567999999998,
+                37.0651291
+            ],
+            "type": "Point"
+        },
+        "new_total_distinct_persons": [0, 0],
+        "new_total_vaccinations": [0, 0],
+        "population": 14926,
+        "region": "Paros",
+        "sources": [
+            "govgr"
+        ],
+        "state": "South Aegean",
+        "to": "2021-01-14T02:00:00+02:00",
+        "total_distinct_persons": [0, 0], // as provided by govgr
+        "total_vaccinations": [0, 0], // as provided by govgr
+        "uid": "PE1210"
+    },
+    (...)
+]
+```
+
 ## Endpoints
 
 All endpoints accept various parameters. We store country level information on `global` collection and region level information on `greece` collection. 
 
-Country and region parameter refer to country specific iso3 code or nuts codes, for global and greece collections accordingly. Accepted `:country` and `:region` params are either `all` to get data for all countries / regions, or iso3 country codes / nuts codes to get specific country or regional data. You can refer to this file [countries-mapping-jhu-wom.csv](https://github.com/cvcio/covid-19-automation/blob/main/data/countries-mapping-jhu-wom.csv), that will help you understand how we map [JHU](https://github.com/CSSEGISandData/COVID-19) ~~and [WoldOMeter](https://www.worldometers.info/coronavirus/)~~ data (column `iso3`) and to this file [region-mapping-imedd.csv](https://github.com/cvcio/covid-19-automation/blob/main/data/region-mapping-imedd.csv) for mapping data from [iMedD](https://github.com/iMEdD-Lab/open-data) (column `uid`).
+Country and region parameter refer to country specific iso3 code or nuts codes, for global and greece collections accordingly. Accepted `:country` and `:region` params are either `all` to get data for all countries / regions, or iso3 country codes / nuts codes to get specific country or regional data. You can refer to this file [countries-mapping-jhu-wom.csv](https://github.com/cvcio/covid-19-automation/blob/main/data/countries-mapping-jhu-wom.csv), that will help you understand how we map [JHU](https://github.com/CSSEGISandData/COVID-19) ~~and [WoldOMeter](https://www.worldometers.info/coronavirus/)~~ data (column `iso3`) and to this file [region-mapping-imedd.csv](https://github.com/cvcio/covid-19-automation/blob/main/data/region-mapping-imedd.csv) for mapping data from [iMedD](https://github.com/iMEdD-Lab/open-data) (column `uid`, and `"PE"+areaid` for vaccines).
 
 Accepted `:keys` are either `all`, which will retrieve all the defaults, or document specific keys, single or comma seperated. This parameter is not included in the aggregated data endpoint.
 
@@ -360,6 +466,16 @@ For regioanal data (Greece) available keys are:
 - **case_fatality_ratio**: daily case fatality ratio ((death / cases) * 100)
 - **incidence_rate**: daily incidence ratio per 100K population ((cases * 100000) / population)
 
+Vaccines related data (Greece Only), available keys are:
+
+- **all**: default, will return all available
+- **total_distinct_persons**: cumulative distinct persons vaccinated (as provided by govgr)
+- **total_vaccinations**: cumulative vaccinations (as provided by govgr)
+- **day_total**: daily vaccinations (as provided by govgr)
+- **day_diff**: daily difference (as provided by govgr)
+- **new_total_distinct_persons**: daily distinct persons vaccinated
+- **new_total_vaccinations**: daily vaccinations
+
 ###### Raw Global Data
 
 ```bash
@@ -397,7 +513,19 @@ curl -XGET https://covid.cvcio.org/greece/all/all/2020-01-01
 curl -XGET https://covid.cvcio.org/greece/EL122/cases/2020-10-01/2020-11-31
 ```
 
-###### Global Total Data (Beta)
+###### Raw Vaccines (Greece Only) Data
+
+```bash
+GET /vaccines/greece/:region/:keys/:from/:to
+
+# ex. get all data, for all regions in greece, from 2020-12-27
+curl -XGET https://covid.cvcio.org/vaccines/greece/all/all/2020-12-27
+
+# get all cases for Thessaloniki region from the begining until the end of the year
+curl -XGET https://covid.cvcio.org/vaccines/greece/PE202/cases/2020-12-27/2020-12-31
+```
+
+###### Global Total Data
 
 ```bash
 GET /total/global/:country/:from/:to
@@ -407,13 +535,22 @@ GET /total/global/:country/:from/:to
 curl -XGET https://covid.cvcio.org/total/global/all/2020-10-01
 ```
 
-###### Greece Total Data (Beta)
+###### Greece Total Data
 
 ```bash
 GET /total/greece/:region/:from/:to
 
 # ex. get total imported (detected at the entry points) cases just for today
 curl -XGET https://covid.cvcio.org/total/greece/EL001
+```
+
+###### Vaccines (Greece Only) Total Data
+
+```bash
+GET /total/vaccines/greece/:region/:from/:to
+
+# ex. get total Thessaloniki region cases just for today
+curl -XGET https://covid.cvcio.org/total/greece/PE202
 ```
 
 ###### Global Aggregated Data (Beta)
@@ -434,6 +571,16 @@ GET /agg/greece/:region/:keys/:from/:to
 # ex. get all aggregated data for Attica region, from
 # the begining of the pandemic
 curl -XGET https://covid.cvcio.org/agg/greece/EL300/all/2020-01-01
+```
+
+###### Vaccines (Greece Only) Aggregated Data (Beta)
+
+```bash
+GET /agg/greece/:region/:keys/:from/:to
+
+# ex. get all aggregated data for Thessaloniki region, from
+# the begining of the pandemic
+curl -XGET https://covid.cvcio.org/agg/greece/PE202/all/2020-01-01
 ```
 
 *Note: the `total` endpoint doesn't include the `:keys` parameter*
