@@ -1,6 +1,6 @@
 # COVID&ndash;19 API
 
-> last updated at Jan 15, 2021
+> last updated at Mar 08, 2021
 
 COVID&ndash;19 API is open-source and developed by [Civic Information Office](https://cvcio.org/) in collaboration with [iMEdD](https://imedd.org/) to help academics, data scientists, journalists, the public, understand the COVID&ndash;19 outbreak in Greece (and worldwide), as the Greek government lacks transparency on this issue. This is an open-source project, so please contribute to make it better.
 
