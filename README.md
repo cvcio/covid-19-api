@@ -146,13 +146,15 @@ Retrieve raw data from the **vaccines** collection. If no `:from` it will return
 // GET /vaccines/greece/all/all/2020-12-01
 [
     {
-        "area": "ΑΡΓΟΛΙΔΑΣ", // as provided by govgr
-        "areaid": 1001, // as provided by govgr
+        "area": "ΑΡΓΟΛΙΔΑΣ",
+        "areaid": 1001,
+        "daily_dose_1": 0, // as provided by govgr
+        "daily_dose_2": 0, // as provided by govgr
         "date": "2020-12-27T02:00:00+02:00",
         "day_diff": 0, // as provided by govgr
         "day_total": 0, // as provided by govgr
         "geo_unit": "Peloponnese",
-        "last_updated_at": "2021-01-15T12:18:34.752+02:00",
+        "last_updated_at": "2021-03-08T14:07:00.68+02:00",
         "loc": {
             "coordinates": [
                 22.858217,
@@ -161,12 +163,16 @@ Retrieve raw data from the **vaccines** collection. If no `:from` it will return
             "type": "Point"
         },
         "new_total_distinct_persons": 0,
+        "new_total_dose_1": 0,
+        "new_total_dose_2": 0,
         "new_total_vaccinations": 0,
         "population": 97044,
         "region": "Argolis",
         "source": "govgr",
         "state": "Peloponnese",
         "total_distinct_persons": 0, // as provided by govgr
+        "total_dose_1": 0, // as provided by govgr
+        "total_dose_2": 0, // as provided by govgr
         "total_vaccinations": 0, // as provided by govgr
         "uid": "PE1001"
     },
@@ -279,33 +285,37 @@ The `total` endpoint is still in active development and may change without furth
 ###### Vaccines (Greece Only) Total Data (Beta)
 
 ```json
-// GET total/vaccines/greece/all/2020-12-27
+// GET /total/vaccines/greece/all/2020-12-27
 [
     {
+        "daily_dose_1": 176, // as provided by govgr
+        "daily_dose_2": 143, // as provided by govgr
         "day_diff": 0, // as provided by govgr
-        "day_total": 0, // as provided by govgr
+        "day_total": 319, // as provided by govgr
         "from": "2020-12-27T02:00:00+02:00",
         "geo_unit": "Aegean",
-        "last_updated_at": "2021-01-15T12:18:34.752+02:00",
+        "last_updated_at": "2021-03-08T14:07:00.68+02:00",
         "loc": {
             "coordinates": [
-                25.125567999999998,
-                37.0651291
+                25.3268288,
+                37.444458000000004
             ],
             "type": "Point"
         },
-        "new_total_distinct_persons": 0,
-        "new_total_vaccinations": 0,
-        "population": 14926,
-        "region": "Paros",
+        "new_total_distinct_persons": 176,
+        "new_total_vaccinations": 319,
+        "population": 10134,
+        "region": "Mykonos",
         "sources": [
             "govgr"
         ],
         "state": "South Aegean",
-        "to": "2021-01-14T02:00:00+02:00",
-        "total_distinct_persons": 0, // as provided by govgr
-        "total_vaccinations": 0, // as provided by govgr
-        "uid": "PE1210"
+        "to": "2021-03-06T02:00:00+02:00",
+        "total_distinct_persons": 176, // as provided by govgr
+        "total_dose_1": 176, // as provided by govgr
+        "total_dose_2": 143, // as provided by govgr
+        "total_vaccinations": 319, // as provided by govgr
+        "uid": "PE1208"
     },
     (...)
 ]
@@ -391,6 +401,8 @@ The `agg` endpoint is still in active development and may change without further
 // GET /agg/vaccines/greece/all/all/2020-11-22
 [
     {
+        "daily_dose_1": [0, 0], // as provided by govgr
+        "daily_dose_2": [0, 0], // as provided by govgr
         "day_diff": [0, 0], // as provided by govgr
         "day_total": [0, 0], // as provided by govgr
         "from": "2021-01-13T02:00:00+02:00",
@@ -413,6 +425,8 @@ The `agg` endpoint is still in active development and may change without further
         "state": "South Aegean",
         "to": "2021-01-14T02:00:00+02:00",
         "total_distinct_persons": [0, 0], // as provided by govgr
+        "total_dose_1": [0, 0], // as provided by govgr
+        "total_dose_2": [0, 0], // as provided by govgr
         "total_vaccinations": [0, 0], // as provided by govgr
         "uid": "PE1210"
     },
@@ -471,7 +485,11 @@ Vaccines related data (Greece Only), available keys are:
 - **all**: default, will return all available
 - **total_distinct_persons**: cumulative distinct persons vaccinated (as provided by govgr)
 - **total_vaccinations**: cumulative vaccinations (as provided by govgr)
+- **total_dose_1**: cumulative vaccinations / dose 1 (as provided by govgr)
+- **total_dose_2**: cumulative vaccinations / dose 2 (as provided by govgr)
 - **day_total**: daily vaccinations (as provided by govgr)
+- **daily_dose_1**: daily vaccinations / dose 1 (as provided by govgr)
+- **daily_dose_2**: daily vaccinations / dose 2 (as provided by govgr)
 - **day_diff**: daily difference (as provided by govgr)
 - **new_total_distinct_persons**: daily distinct persons vaccinated
 - **new_total_vaccinations**: daily vaccinations

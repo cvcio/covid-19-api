@@ -2,8 +2,6 @@ package gr_vaccines
 
 import (
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -11,39 +9,9 @@ var (
 		"date", "uid", "geo_unit", "state", "region", "loc",
 		"population", "source",
 		"total_distinct_persons", "total_vaccinations", "day_total", "day_diff",
+		"daily_dose_1", "daily_dose_2", "total_dose_1", "total_dose_2",
 	}
 )
-
-// Loc Location struct
-type Loc struct {
-	Type        string    `bson:"type" json:"type,omitempty"`
-	Coordinates []float64 `bson:"coordinates" json:"coordinates,omitempty"`
-}
-
-// GRVaccine represents the document structure of documents in the
-// 'GRVaccine' collection parsed from sources JHU and WOM
-type GRVaccine struct {
-	ID primitive.ObjectID `bson:"_id" json:"-"`
-	// covid related date
-	Date          time.Time `bson:"date" json:"date,omitempty"`
-	LastUpdatedAt time.Time `bson:"last_updated_at" json:"last_updated_at,omitempty"`
-	// location data
-	UID        string `bson:"uid" json:"uid,omitempty"`
-	AreaID     int    `bson:"areaid" json:"areaid,omitempty"`
-	GeoUnit    string `bson:"geo_unit" json:"geo_unit,omitempty"`
-	State      string `bson:"state" json:"state,omitempty"`
-	Region     string `bson:"region" json:"region,omitempty"`
-	Area       string `bson:"area" json:"area,omitempty"`
-	Loc        *Loc   `bson:"loc" json:"loc,omitempty"`
-	Population int64  `bson:"population" json:"population"`
-	// vaccines related metrics
-	DayDiff              int32 `bson:"daydiff" json:"daydiff,omitempty"`
-	DayTotal             int32 `bson:"daytotal" json:"daytotal,omitempty"`
-	TotalDistinctPersons int32 `bson:"totaldistinctpersons" json:"totaldistinctpersons,omitempty"`
-	TotalVaccination     int32 `bson:"totalvaccinations" json:"totalvaccinations,omitempty"`
-	// source
-	Source string `bson:"source" json:"source,omitempty"`
-}
 
 // ListOptions represents the filter structure to query
 // the database
