@@ -14,6 +14,18 @@ var (
 		"tests", "new_tests",
 		"tests_rtpcr", "new_tests_rtpcr",
 		"tests_rapid", "new_tests_rapid",
+
+		"icu_discharges",
+		"hospital_admissions",
+		"hospital_discharges",
+		"new_hospital_admissions",
+		"new_hospital_discharges",
+		"intubated_unvac",
+		"intubated_vac",
+
+		"icu_occupancy",
+		"beds_occupancy",
+		"icu_availability",
 	}
 )
 

@@ -165,8 +165,10 @@ func Agg(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 		group = append(group, bson.E{"new_total_vaccinations", bson.D{{"$push", "$new_total_vaccinations"}}})
 		group = append(group, bson.E{"total_dose_1", bson.D{{"$push", "$total_dose_1"}}})
 		group = append(group, bson.E{"total_dose_2", bson.D{{"$push", "$total_dose_2"}}})
+		group = append(group, bson.E{"total_dose_3", bson.D{{"$push", "$total_dose_3"}}})
 		group = append(group, bson.E{"daily_dose_1", bson.D{{"$push", "$daily_dose_1"}}})
 		group = append(group, bson.E{"daily_dose_2", bson.D{{"$push", "$daily_dose_2"}}})
+		group = append(group, bson.E{"daily_dose_3", bson.D{{"$push", "$daily_dose_3"}}})
 	}
 
 	// set agg options
@@ -266,12 +268,14 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 
 	group = append(group, bson.E{"total_dose_1", bson.D{{"$last", "$total_dose_1"}}})
 	group = append(group, bson.E{"total_dose_2", bson.D{{"$last", "$total_dose_2"}}})
+	group = append(group, bson.E{"total_dose_3", bson.D{{"$last", "$total_dose_3"}}})
 
 	group = append(group, bson.E{"day_diff", bson.D{{"$sum", "$day_diff"}}})
 	group = append(group, bson.E{"day_total", bson.D{{"$sum", "$day_total"}}})
 
 	group = append(group, bson.E{"daily_dose_1", bson.D{{"$sum", "$daily_dose_1"}}})
 	group = append(group, bson.E{"daily_dose_2", bson.D{{"$sum", "$daily_dose_2"}}})
+	group = append(group, bson.E{"daily_dose_3", bson.D{{"$sum", "$daily_dose_3"}}})
 
 	group = append(group, bson.E{"new_total_distinct_persons", bson.D{{"$sum", "$new_total_distinct_persons"}}})
 	group = append(group, bson.E{"new_total_vaccinations", bson.D{{"$sum", "$new_total_vaccinations"}}})

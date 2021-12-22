@@ -9,7 +9,8 @@ var (
 		"date", "uid", "geo_unit", "state", "region", "loc",
 		"population", "source",
 		"total_distinct_persons", "total_vaccinations", "day_total", "day_diff",
-		"daily_dose_1", "daily_dose_2", "total_dose_1", "total_dose_2",
+		"daily_dose_1", "daily_dose_2", "daily_dose_3",
+		"total_dose_1", "total_dose_2", "total_dose_3",
 	}
 )
 
@@ -68,6 +69,8 @@ func To(i time.Time) func(*ListOptions) {
 func DefaultOpts() ListOptions {
 	l := ListOptions{}
 	l.Limit = -1
+	l.From, _ = time.Parse("2006-01-02", "2020-01-01")
+	l.To = time.Now()
 	return l
 }
 

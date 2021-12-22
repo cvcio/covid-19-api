@@ -255,6 +255,10 @@ func Sum(dbConn *db.DB, optionsList ...func(*ListOptions)) ([]*map[string]interf
 	group = append(group, bson.E{"total_active", bson.D{{"$last", "$active"}}})
 	group = append(group, bson.E{"total_critical", bson.D{{"$last", "$critical"}}})
 	group = append(group, bson.E{"total_tests", bson.D{{"$last", "$tests"}}})
+	group = append(group, bson.E{"total_hospital_admissions", bson.D{{"$last", "$hospital_admissions"}}})
+	group = append(group, bson.E{"total_hospital_discharges", bson.D{{"$last", "$hospital_discharges"}}})
+	group = append(group, bson.E{"total_intubated_unvac", bson.D{{"$last", "$intubated_unvac"}}})
+	group = append(group, bson.E{"total_intubated_vac", bson.D{{"$last", "$intubated_vac"}}})
 
 	group = append(group, bson.E{"cases", bson.D{{"$sum", "$new_cases"}}})
 	group = append(group, bson.E{"deaths", bson.D{{"$sum", "$new_deaths"}}})
