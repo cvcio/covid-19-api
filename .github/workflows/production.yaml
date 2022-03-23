@@ -23,7 +23,6 @@ jobs:
       - name: Login to ACR
         uses: docker/login-action@v1
         with:
-          registry: ${{ secrets.CVCIO_CONTAINER_REGISTRY }}
           username: ${{ secrets.CVCIO_CLIENT_ID }}
           password: ${{ secrets.CVCIO_CLIENT_SECRET }}
       - name: Build and push Docker images
